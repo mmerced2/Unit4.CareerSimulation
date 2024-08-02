@@ -13,37 +13,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
+//adding ? makes the field optional 
 model users{
   id String @id @default(uuid())
   username String @unique
   password String
-  email String
-  firstname String
-  lastname String
+  email String?
+  first_name String?
+  last_name String?
+  products products[]
 
 }
 
 model products{
   id String @id @default(uuid())
   name String
-  type String
+  product_type String
   description String
-
-  //Instructor Instructor? @relation(fields: [instructorId], references: [id])
+  img_url String
+  user_id String
+  user users? @relation(fields: [user_id], references: [id])
 }
 
-
-model reviews{
-  id String @id @default(uuid())
-  score Float
-  txt String
-
-  //Instructor Instructor? @relation(fields: [instructorId], references: [id])
-}
-
-model comments{
-    id String @id @default(uuid())
-    comments String 
-
-}
