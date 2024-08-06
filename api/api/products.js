@@ -7,7 +7,7 @@ const {
   updateProducts,
   deleteProduct,
 } = require("../../db/products");
-const { checkProductData } = require("./products_utils");
+const {  checkProductsData } = require("./products_utils");
 
 // GET /api/products
 productsRouter.get("/", async (req, res, next) => {
@@ -16,12 +16,13 @@ productsRouter.get("/", async (req, res, next) => {
 
     res.send({ products });
   } catch ({ name, message }) {
+    console.log({name,message})
     next({ name, message });
   }
 });
 
 //POST /api/products
-productsRouter.post("/", checkProductData, async (req, res, next) => {
+productsRouter.post("/", checkProductsData, async (req, res, next) => {
   try {
     const product = await createProduct({ ...req.body, user_id: req.user.user_id });
 

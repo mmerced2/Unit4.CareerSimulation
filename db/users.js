@@ -8,8 +8,13 @@ const createUser = (userData) => {
 
 const findUserByUsername = (username) => {
     return prisma.users.findUnique({
-        where: {username}
+        where: {username},
+    })
+};
+
+const findUserById = (username) => {
+    return prisma.users.findUnique({
+        where: {username},
     })
 }
-
-module.exports = {createUser, findUserByUsername}
+module.exports = {createUser, findUserByUsername, findUserById};

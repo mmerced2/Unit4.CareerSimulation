@@ -28,7 +28,7 @@ authRouter.post('/register', checkUserData, checkUser, async (req,res) =>{
 });
 
 //login route
-authRouter.post('/login', findUserByUsername, async (req,res,next) => {
+authRouter.post('/login', async (req,res,next) => {
 try{
     const user = await findUserByUsername(req.body.username);
 
@@ -46,11 +46,11 @@ try{
         process.env.JWT || "super secret super safe"
     );
 
-    res.status(401).send({token});
+    res.send({token});
 }
 catch(error){
     console.log(error);
-     next(error)
+    // next(error)
 }
 
 
