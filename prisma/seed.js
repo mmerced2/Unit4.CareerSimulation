@@ -19,11 +19,10 @@ const main = async () => {
             });
         })
     );
-    const users = await prisma.users.findMany();
+   const users = await prisma.users.findMany();
     console.log("created users:", users)
 
     console.log("Creating Products")
-    //const [product1, product2, product3, product4, product5] = 
     await Promise.all([user1,user2,user3,user4,user5].map((user) =>
         [...Array(5)].map(async () => {
             await prisma.products.create({
@@ -37,19 +36,50 @@ const main = async () => {
              });
          })
     
-    )
-  
-    );
+    ) );
 
-    const products = await prisma.products.findMany();
-    console.log("created products:", products);
+   const products = await prisma.products.findMany();
+   console.log("created products:", products);
 
+
+    console.log("Generating reviews");
+    //   can remove review1, review2, etc if you include the findMany
+      const [review1, review2, review3] = await Promise.all(
+        [...Array(3)].map(( _, i) => {
+          return prisma.reviews.create({
+            data: {
+              rating: faker.number.float({ min: 1, max: 5 }),
+              text: faker.lorem.sentences({ min: 2, max: 5 }),
+              user_id: users[i].id,
+              product_id: products[i].id,
+            },
+          });
+        })
+      );
+      const reviews = await prisma.reviews.findMany();
+     console.log("generated reviews:", reviews);
+
+
+     console.log("Generating comments");
+      const [comment1, comment2, comment3] = await Promise.all(
+        [...Array(3)].map(( _, i) => {
+          return prisma.comments.create({
+            data: {
+              text: faker.lorem.sentences({ min: 2, max: 5 }),
+              user_id: users[i].id,
+              review_id: reviews[i].id,
+            },
+          });
+        })
+      );
+      const comments = await prisma.comments.findMany();
+      console.log("generated comments:", comments);
 
 };
 
 main().then(async ()=> {
     await prisma.$disconnect()
 }).catch( async(err) => {
-    console.lof(`ERROR: ${err}`);
+    console.log(`ERROR: ${err}`);
     await prisma.$disconnect()
 })

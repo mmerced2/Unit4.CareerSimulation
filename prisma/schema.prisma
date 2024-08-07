@@ -35,3 +35,22 @@ model products{
   user users? @relation(fields: [user_id], references: [id])
 }
 
+model reviews {
+  id        String @id @default(uuid())
+  rating    Int
+  text      String
+  product_id  String
+  user_id    String
+  createdAt DateTime @default(now())
+
+  @@unique([product_id, user_id])
+}
+
+model comments {
+  id        String @id @default(uuid())
+  text      String
+  review_id  String
+  user_id    String
+  createdAt DateTime @default(now())
+}
+
