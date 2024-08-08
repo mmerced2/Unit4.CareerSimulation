@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {createUser,findUserByUsername}= require('../../db/users');
+const {createUser,findUserByUsername, findUserById}= require('../../db/users');
 const {checkUserData, checkUser} = require('./utils')
 
 const authRouter = express.Router();
@@ -55,5 +55,7 @@ catch(error){
 
 
 });
+
+
 
 module.exports = authRouter;

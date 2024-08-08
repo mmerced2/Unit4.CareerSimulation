@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const {findUserById} = require("../db/users");
-const {requireUser} = require("./api/products_utils")
+const {requireUser} = require("./products_utils")
 
 // set `req.user` if possible
 router.use(async (req, res, next) => {
@@ -48,6 +48,16 @@ router.use("/auth", require("./auth/auth"));
 //product routers
 const productsRouter = require("./api/products")
 router.use("/",requireUser,productsRouter );
+
+
+//users router
+const usersRouter = require("./users");
+router.use("/users", usersRouter);
+
+//reviews router
+const reviewsRouter = require("./reviews");
+router.use("/reviews", reviewsRouter);
+
 
 
 router.use((error, req, res, next) => {

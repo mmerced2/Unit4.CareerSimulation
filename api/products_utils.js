@@ -3,7 +3,7 @@ function requireUser(req, res, next) {
       return res.status(401).send("You must be logged in to do that.");
     }
     next();
-  }
+  };
   
   /**
    *
@@ -11,14 +11,14 @@ function requireUser(req, res, next) {
    * before creating a new product
    */
   function checkProductsData(req, res, next) {
-    const { product_type, description, img_url } = req.body;
-    if (!product_type || !description || !img_url) {
+    const { product_type, description } = req.body;
+    if (!product_type || !description ) {
       return res
         .status(400)
         .send("Please provide your product details");
     }
     next();
-  }
+  };
   
   module.exports = {
     checkProductsData,

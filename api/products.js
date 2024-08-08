@@ -6,8 +6,8 @@ const {
   getProductById,
   updateProducts,
   deleteProduct,
-} = require("../../db/products");
-const {  checkProductsData } = require("./products_utils");
+} = require("../db/products");
+const { checkProductsData } = require("./products_utils");
 
 // GET /api/products
 productsRouter.get("/", async (req, res, next) => {
