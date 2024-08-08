@@ -15,7 +15,8 @@ reviewsRouter.get("/",  async(req, res, next) => {
   }
 });
 
-//placeholder//not complete 
+
+///placeholder for get review by id
 reviewsRouter.get("/:id", async (req,res,next) => {
     try{
         const reviews = await getReviewById(req.params.id);
@@ -23,6 +24,39 @@ reviewsRouter.get("/:id", async (req,res,next) => {
     }catch(error){
         next(error);
     }
-})
+});
+
+
+///placeholder for creating review
+reviewsRouter.post("/", async (req,res,next) => {
+    try{
+      
+
+    }catch(error){
+        next(error);
+    }
+});
+
+///placeholder for updating review
+reviewsRouter.patch("/", async (req,res,next) => {
+    try{
+      
+
+    }catch(error){
+        next(error);
+    }
+});
+
+
+///placeholder for deleting review
+reviewsRouter.delete("/", async (req,res,next) => {
+    try{
+      
+
+    }catch(error){
+        next(error);
+    }
+});
+
 
 module.exports = reviewsRouter;

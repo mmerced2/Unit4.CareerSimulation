@@ -1,13 +1,14 @@
 const express = require("express");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const {createUser,findUserByUsername, findUserById}= require('../../db/users');
+const {createUser,findUserByUsername}= require('../../db/users');
 const {checkUserData, checkUser} = require('./utils')
 
 const authRouter = express.Router();
 
 //register route
-authRouter.post('/register', checkUserData, checkUser, async (req,res) =>{
+/// checkUserData, checkUser,
+authRouter.post('/register', checkUserData, checkUser, async (req,res,next) =>{
     try{
     //username, password --> req.body
     const {username, password} = req.body;
@@ -21,8 +22,9 @@ authRouter.post('/register', checkUserData, checkUser, async (req,res) =>{
     res.status(201).send({token});
     } catch(error){
         console.log(error)
+        next(error);
         //send response (status, body: {token})
-        res.status(500).send({error,message: "Could not register user"});
+       // res.status(500).send({error,message: "Could not register user"});
     }
 
 });
@@ -50,7 +52,7 @@ try{
 }
 catch(error){
     console.log(error);
-    // next(error)
+    next(error)
 }
 
 

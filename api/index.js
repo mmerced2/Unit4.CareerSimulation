@@ -46,7 +46,7 @@ router.use("/auth", require("./auth/auth"));
 
 
 //product routers
-const productsRouter = require("./api/products")
+const productsRouter = require("./products")
 router.use("/",requireUser,productsRouter );
 
 
