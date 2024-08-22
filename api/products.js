@@ -7,12 +7,12 @@ const {
   updateProducts,
   deleteProduct,
 } = require("../db/products");
-const { checkProductsData } = require("./products_utils");
+const { checkProductsData ,requireUser} = require("./products_utils");
 
 // GET /api/products
 productsRouter.get("/", async (req, res, next) => {
   try {
-    const products = await getAllProducts(req.user.user_id);
+    const products = await getAllProducts();
 
     res.send({ products });
   } catch ({ name, message }) {
@@ -22,7 +22,7 @@ productsRouter.get("/", async (req, res, next) => {
 });
 
 //POST /api/products
-productsRouter.post("/", checkProductsData, async (req, res, next) => {
+productsRouter.post("/", requireUser,checkProductsData, async (req, res, next) => {
   try {
     const product = await createProduct({ ...req.body, user_id: req.user.user_id });
 
@@ -35,7 +35,7 @@ productsRouter.post("/", checkProductsData, async (req, res, next) => {
 // GET /api/products/:id
 productsRouter.get("/:id", async (req, res, next) => {
   try {
-    const product = await getProductById(parseInt(req.params.id));
+    const product = await getProductById(req.params.id);
 
     res.send({ product });
   } catch ({ name, message }) {
@@ -44,7 +44,7 @@ productsRouter.get("/:id", async (req, res, next) => {
 });
 
 // PUT /api/products/:id
-productsRouter.put("/:id", async (req, res, next) => {
+productsRouter.put("/:id", requireUser,async (req, res, next) => {
   try {
     //makes sure to pull out only the columns for our product from the req.body
     const { name,description,product_type, img_url,} = req.body;
@@ -62,7 +62,7 @@ productsRouter.put("/:id", async (req, res, next) => {
 });
 
 // DELETE /api/products/:id
-productsRouter.delete("/:id", async (req, res, next) => {
+productsRouter.delete("/:id",requireUser, async (req, res, next) => {
   try {
     const product = await deleteProduct(parseInt(req.params.id));
 

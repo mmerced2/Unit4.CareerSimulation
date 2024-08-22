@@ -6,30 +6,33 @@ const createProduct = (productData) => {
   });
 };
 
-const getAllProducts = (user_id) => {
+const getAllProducts = async () => {
   return prisma.products.findMany({
-    where: { user_id },
+   orderBy: {
+    product_type: "asc",
+   }
   });
+  return products;
 };
 
-const getProductById = (id) => {
+const getProductById = async (product_id) => {
   return prisma.products.findUnique({
-    where: { product_id: id },
+    where: { id : product_id },
   });
 };
 
-const updateProducts = (id, productData) => {
+const updateProducts = async (product_id, productData) => {
   return prisma.products.update({
-    where: { product_id: id },
+    where: {  id: product_id },
     data: productData,
   });
 };
 
-const deleteProduct = async (id) => {
+const deleteProduct = async (product_id) => {
   const product = await getProductById(id);
   if (product) {
     return prisma.products.delete({
-      where: { product_id: id },
+      where: {  id : product_id },
     });
   }
   return;
