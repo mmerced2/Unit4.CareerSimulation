@@ -2,7 +2,7 @@ const express = require("express");
 const usersRouter = express.Router();
 const {requireUser} = require("./products_utils")
 
-usersRouter.get("/", requireUser, async(req, res, next) => {
+usersRouter.get("/", requireUser,async(req, res, next) => {
     try{
         //delete the user's password since the FE doesnt need this
         delete req.user.password
@@ -13,7 +13,7 @@ usersRouter.get("/", requireUser, async(req, res, next) => {
      * user
      */
  res.send({
-      user: req.user,
+      user: req.user.id,
     });
   } catch ({ name, message }) {
     next({ name, message });

@@ -42,9 +42,10 @@ try{
     if(!user || !isSamepassword) {
         return res.status(401).send("Invalid login credentials");
     };
+    console.log(user.id);
 
     const token = jwt.sign(
-        {id: user.user_id},
+        {id: user.id},
         process.env.JWT || "super secret super safe"
     );
 
