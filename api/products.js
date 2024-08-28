@@ -64,7 +64,7 @@ productsRouter.put("/:id", requireUser,async (req, res, next) => {
 // DELETE /api/products/:id
 productsRouter.delete("/:id",requireUser, async (req, res, next) => {
   try {
-    const product = await deleteProduct(parseInt(req.params.id));
+    const product = await deleteProduct(req.params.id);
 
     res.send({ product });
   } catch ({ name, message }) {

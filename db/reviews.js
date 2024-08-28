@@ -12,9 +12,9 @@ const getReviews = (user_id) => {
     });
 };
 
-const getReviewById = (id) => {
+const getReviewById = async (review_id) => {
     return prisma.reviews.findUnique({
-        where: {review_id: id},
+        where: {id: review_id},
     });
 };
 

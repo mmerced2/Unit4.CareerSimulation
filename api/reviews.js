@@ -19,42 +19,47 @@ reviewsRouter.get("/",  async(req, res, next) => {
 ///placeholder for get review by id
 reviewsRouter.get("/:id", async (req,res,next) => {
     try{
-        const reviews = await getReviewById(req.params.id);
+        const review = await getReviewById(req.params.id);
+        res.send({review});
 
-    }catch(error){
-        next(error);
+    }catch({name, message}){
+        next({ name, message });
     }
 });
 
 
 ///placeholder for creating review
-reviewsRouter.post("/", async (req,res,next) => {
+reviewsRouter.post("/", requireUser,async (req,res,next) => {
     try{
+        const review = await createReview({...req.body, user_id: req.user.user_id});
+        res.send({review});
       
 
-    }catch(error){
-        next(error);
+    }catch({name, message}){
+        next({name,message});
     }
 });
 
 ///placeholder for updating review
 reviewsRouter.patch("/", async (req,res,next) => {
     try{
-      
+      const review = await getReviewById(req.params.id);
+      res.send({review});
 
-    }catch(error){
-        next(error);
+    }catch({name, message}){
+        next({name, message});
     }
 });
 
 
 ///placeholder for deleting review
-reviewsRouter.delete("/", async (req,res,next) => {
+reviewsRouter.delete("/:id",requireUser, async (req,res,next) => {
     try{
-      
+      const review = await deleteReview(req.params.id);
+      res.send({review});
 
-    }catch(error){
-        next(error);
+    }catch({name, message}){
+        next({name, message});
     }
 });
 
