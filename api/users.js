@@ -13,7 +13,7 @@ usersRouter.get("/", requireUser,async(req, res, next) => {
      * user
      */
  res.send({
-      user: req.user.id,
+    user: req.user
     });
   } catch ({ name, message }) {
     next({ name, message });
