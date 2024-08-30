@@ -11,11 +11,11 @@ const authRouter = express.Router();
 authRouter.post('/register', checkUserData, checkUser, async (req,res,next) =>{
     try{
     //username, password --> req.body
-    const {username, password} = req.body;
+    const {username, password,first_name, last_name, email} = req.body;
     //hash password
     const hashPass = await bcrypt.hash(password, parseInt(process.env.SALT) || 5);
     //create user in db
-    const user = await createUser({username,password: hashPass});
+    const user = await createUser({username,first_name,last_name,email,password: hashPass});
     //create token for user --> include id
     const token = jwt.sign({id: user.id}, process.env.JWT || "super secret super safe");
     //send response (status, body)
