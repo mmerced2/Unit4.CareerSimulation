@@ -16,13 +16,12 @@ router.use(async (req, res, next) => {
       const token = auth.slice(prefix.length);
   
       try {
-        console.log(`I am on line 19`)
+
         
         const {id} = jwt.verify(
           token,
           process.env.JWT || "super secret super safe"
         );
-        console.log("my id:",id)
   
         if (id) {
           req.user = await findUserById(id);

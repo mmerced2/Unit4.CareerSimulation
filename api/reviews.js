@@ -1,7 +1,7 @@
 const express = require("express");
 const reviewsRouter = express.Router();
 const {requireUser} = require("./products_utils");
-const {getReviews, getReviewById, updateReview,deleteReview,createReview} =require('../db/reviews')
+const {getReviews, getReviewById, updateReview,deleteReview,createReview,getReviewsbyUserId } =require('../db/reviews')
 
 
 //get request for reviews
@@ -16,6 +16,7 @@ reviewsRouter.get("/",  async(req, res, next) => {
 });
 
 
+
 ///placeholder for get review by id
 reviewsRouter.get("/:id", async (req,res,next) => {
     try{
@@ -28,25 +29,44 @@ reviewsRouter.get("/:id", async (req,res,next) => {
 });
 
 
-///placeholder for creating review
-reviewsRouter.post("/", requireUser,async (req,res,next) => {
+
+///placeholder for get review by user id
+reviewsRouter.get("/user/:id", async (req,res,next) => {
     try{
-        const review = await createReview({...req.body, user_id: req.user.user_id});
+        const review = await getReviewsbyUserId(req.params.id);
         res.send({review});
-      
 
     }catch({name, message}){
-        next({name,message});
+        next({ name, message });
+    }
+});
+
+
+///placeholder for creating review
+reviewsRouter.post("/:id", requireUser,async (req,res,next) => {
+    try{
+        console.log(req.user);
+        const review = await createReview({
+          ...req.body,
+          product_id: req.params.id,
+        });
+    
+        res.send({ review });
+    }catch({name, message}){
+        next({name, message});
     }
 });
 
 ///placeholder for updating review
-reviewsRouter.patch("/", async (req,res,next) => {
+reviewsRouter.put("/:id",requireUser, async (req,res,next) => {
     try{
-      const review = await getReviewById(req.params.id);
-      res.send({review});
+      const {rating,text} = req.body;
+      const review = await updateReview(req.params.id, {rating,text});
+      res.status(200).send({review});
 
     }catch({name, message}){
+
+
         next({name, message});
     }
 });
@@ -56,10 +76,12 @@ reviewsRouter.patch("/", async (req,res,next) => {
 reviewsRouter.delete("/:id",requireUser, async (req,res,next) => {
     try{
       const review = await deleteReview(req.params.id);
+      console.log("deleted review:" , review);
       res.send({review});
 
-    }catch({name, message}){
-        next({name, message});
+    }catch(error){
+        console.log(error)
+        next(error);
     }
 });
 
