@@ -31,7 +31,7 @@ reviewsRouter.get("/:id", async (req,res,next) => {
 
 
 ///placeholder for get review by user id
-reviewsRouter.get("/user/:id", async (req,res,next) => {
+reviewsRouter.get("/user/:id",requireUser, async (req,res,next) => {
     try{
         const review = await getReviewsbyUserId(req.params.id);
         res.send({review});
