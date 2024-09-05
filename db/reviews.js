@@ -9,7 +9,9 @@ const createReview = (reviewsData) => {
 const getReviewsbyUserId = (user_id) => {
     return prisma.reviews.findMany({
         where: {user_id},
-        include:{products:true}
+        include: {
+            products : true,
+        },
     });
 };
 
