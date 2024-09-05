@@ -15,6 +15,16 @@ reviewsRouter.get("/",  async(req, res, next) => {
   }
 });
 
+///placeholder for get review by user id
+reviewsRouter.get("/user/",requireUser, async (req,res,next) => {
+    try{
+        const review = await getReviewsbyUserId(req.user.id);
+        res.send({review});
+
+    }catch(error){
+       console.log(error);
+    }
+});
 
 
 ///placeholder for get review by id
@@ -30,16 +40,6 @@ reviewsRouter.get("/:id", async (req,res,next) => {
 
 
 
-///placeholder for get review by user id
-reviewsRouter.get("/user/:id",requireUser, async (req,res,next) => {
-    try{
-        const review = await getReviewsbyUserId(req.params.id);
-        res.send({review});
-
-    }catch({name, message}){
-        next({ name, message });
-    }
-});
 
 
 ///placeholder for creating review
