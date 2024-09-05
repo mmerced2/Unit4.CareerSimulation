@@ -22,6 +22,7 @@ reviewsRouter.get("/user/",requireUser, async (req,res,next) => {
         res.send({review});
 
     }catch(error){
+        res.send({error})
        console.log(error);
     }
 });
