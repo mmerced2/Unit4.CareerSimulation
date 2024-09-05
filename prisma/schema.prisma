@@ -14,43 +14,45 @@ datasource db {
 }
 
 //adding ? makes the field optional 
-model users{
-  id String @id @default(uuid())
-  username String @unique
-  password String
-  email String?
+model users {
+  id         String     @id @default(uuid())
+  username   String     @unique
+  password   String
+  email      String?
   first_name String?
-  last_name String?
-  products products[]
-
+  last_name  String?
+  products   products[]
 }
 
-model products{
-  id String @id @default(uuid())
-  name String
+model products {
+  id           String   @id @default(uuid())
+  name         String
   product_type String
-  description String
-  img_url String
-  user_id String
-  user users? @relation(fields: [user_id], references: [id])
+  description  String
+  img_url      String
+  user_id      String
+  user         users?   @relation(fields: [user_id], references: [id])
+  reviews      reviews[]
+
 }
 
 model reviews {
-  id        String @id @default(uuid())
-  rating    Int
-  text      String
-  product_id  String
+  id         String   @id @default(uuid())
+  rating     Int
+  text       String
+  product_id String
   user_id    String
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+  products   products @relation(fields: [product_id], references: [id])
+
 
   @@unique([product_id, user_id])
 }
 
 model comments {
-  id        String @id @default(uuid())
+  id        String   @id @default(uuid())
   text      String
-  review_id  String
-  user_id    String
+  review_id String
+  user_id   String
   createdAt DateTime @default(now())
 }
-
