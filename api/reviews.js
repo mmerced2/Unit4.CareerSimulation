@@ -21,8 +21,8 @@ reviewsRouter.get("/user/",requireUser, async (req,res,next) => {
         const review = await getReviewsbyUserId(req.user.id);
         res.send({review});
 
-    }catch(error){
-        res.send({error})
+    }catch({name, message}){
+        next({ name, message });
        console.log(error);
     }
 });
