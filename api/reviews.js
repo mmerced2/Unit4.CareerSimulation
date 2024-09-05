@@ -48,6 +48,7 @@ reviewsRouter.post("/:id", requireUser,async (req,res,next) => {
         console.log(req.user);
         const review = await createReview({
           ...req.body,
+          user_id: req.user.id,
           product_id: req.params.id,
         });
     
