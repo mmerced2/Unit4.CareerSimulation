@@ -1,9 +1,12 @@
 const prisma = require("./index");
 
-const getReviews = (reviewsData) => {
+const getReviews = async () => {
     return prisma.reviews.findMany({
-        data: reviewsData,
-    });
+        orderBy: {
+            product_id: "asc",
+           }
+          });
+          return reviews;
 };
 
 const createReview = (reviewsData) => {

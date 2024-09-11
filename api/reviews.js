@@ -8,7 +8,7 @@ const {getReviews, getReviewById, updateReview,deleteReview,createReview,getRevi
 reviewsRouter.get("/",  async(req, res, next) => {
     try{
         const reviews = await getReviews();
-        res.send(reviews);
+        res.send({reviews});
 
   } catch (error) {
     next(error);
