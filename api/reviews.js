@@ -11,7 +11,7 @@ reviewsRouter.get("/",  async(req, res, next) => {
         res.send(reviews);
 
   } catch (error) {
-    next({ err});
+    next(error);
   }
 });
 

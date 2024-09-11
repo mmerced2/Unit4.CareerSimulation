@@ -1,5 +1,11 @@
 const prisma = require("./index");
 
+const getReviews = (reviewsData) => {
+    return prisma.reviews.findMany({
+        data: reviewsData,
+    });
+};
+
 const createReview = (reviewsData) => {
     return prisma.reviews.create({
         data: reviewsData,
@@ -48,6 +54,7 @@ const deleteReview = async (review_id) => {
 
 
 module.exports = {
+  getReviews,
   getReviewsbyUserId,
   getReviewById,
   getReviewByProductId,
