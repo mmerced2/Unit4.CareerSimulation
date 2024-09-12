@@ -1,85 +1,103 @@
-const {PrismaClient} = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
+const { albumsArray } = require('./albums_data');
+const { faker } = require('@faker-js/faker');
+
 const prisma = new PrismaClient();
-const {faker} = require('@faker-js/faker');
 
 const main = async () => {
     await prisma.$connect();
-    //seed 5 users
-    console.log("Creating Users")
-    const [user1, user2, user3, user4, user5] = await Promise.all(
-        [...Array(5)].map(() => {
-           return prisma.users.create({
+
+    // Clear existing data
+    console.log('Clearing existing data...');
+    const deleteComments = prisma.products.deleteMany();
+    const deleteReviews = prisma.reviews.deleteMany();
+    const deleteProducts = prisma.products.deleteMany();
+    const deleteUsers = prisma.users.deleteMany();
+    await prisma.$transaction([deleteReviews,deleteComments,deleteProducts,deleteUsers]);
+
+    // Seed users
+    console.log('Creating users...');
+    const users = await Promise.all(
+        [...Array(3)].map(() =>
+            prisma.users.create({
                 data: {
                     username: faker.internet.userName(),
                     password: faker.internet.password(),
                     email: faker.internet.email(),
-                    first_name: faker.person.firstName() ,
-                    last_name: faker.person.lastName() ,
+                    first_name: faker.person.firstName(),
+                    last_name: faker.person.lastName(),
+                    phone_number: faker.phone.number(),
+                    street_address: faker.location.streetAddress(true),
+                    city: faker.location.city(),
+                    state: faker.location.state(),
+                    zip_code: faker.location.zipCode(),
+                    country_code: faker.location.countryCode(),
                 },
-            });
-        })
+            })
+        )
     );
-   const users = await prisma.users.findMany();
-    console.log("created users:", users)
+    console.log('Created users:', users);
 
-    console.log("Creating Products")
-    await Promise.all([user1,user2,user3,user4,user5].map((user) =>
-        [...Array(5)].map(async () => {
-            await prisma.products.create({
-                 data: {
-                     name: "Pink Disco Balloon Garland",
-                     product_type: "Balloons",
-                     description: "132pcs Hot Pink White Latex Balloons Garland Arch Kit for Princess Theme Birthday Party Scene Decor Arrangement",
-                     img_url: "https://i5.walmartimages.com/seo/Beyondtrade-132pcs-Hot-Pink-White-Latex-Balloons-Garland-Arch-Kit-for-Princess-Theme-Birthday-Party-Scene-Decor-Arrangement_e820d813-afda-4570-88af-fadec1a2d477.798222b008518e49caaf3d5c8b8655d1.jpeg?odnHeight=2000&odnWidth=2000&odnBg=FFFFFF" ,
-                     user_id: user.id
-                 },
-             });
-         })
-    
-    ) );
+    // Seed products using albumsArray
+    console.log('Creating products...');
+    await Promise.all(
+        users.map(user =>
+            Promise.all(
+                albumsArray.map(album =>
+                    prisma.products.create({
+                        data: {
+                            name: album.name,
+                            product_type: album.product_type,
+                            description: album.description,
+                            img_url: album.img_url,
+                            category: album.category,
+                            artist: album.artist,
+                            user_id: user.id, // Assign user ID from the list of users
+                        },
+                    })
+                )
+            )
+        )
+    );
 
-   const products = await prisma.products.findMany();
-   console.log("created products:", products);
+    const products = await prisma.products.findMany();
+    console.log('Created products:', products);
 
+    // Generate reviews
+    console.log('Generating reviews...');
+    const reviews = await Promise.all(
+        products.map(product =>
+            prisma.reviews.create({
+                data: {
+                    rating: faker.number.float({ min: 1, max: 5 }),
+                    text: faker.lorem.sentences({ min: 2, max: 5 }),
+                    user_id: users[Math.floor(Math.random() * users.length)].id, // Random user ID
+                    product_id: product.id,
+                },
+            })
+        )
+    );
+    console.log('Generated reviews:', reviews);
 
-    console.log("Generating reviews");
-    //   can remove review1, review2, etc if you include the findMany
-      const [review1, review2, review3] = await Promise.all(
-        [...Array(3)].map(( _, i) => {
-          return prisma.reviews.create({
-            data: {
-              rating: faker.number.float({ min: 1, max: 5 }),
-              text: faker.lorem.sentences({ min: 2, max: 5 }),
-              user_id: users[i].id,
-              product_id: products[i].id,
-            },
-          });
-        })
-      );
-      const reviews = await prisma.reviews.findMany();
-     console.log("generated reviews:", reviews);
+    // Generate comments
+    console.log('Generating comments...');
+    const comments = await Promise.all(
+        reviews.map(review =>
+            prisma.comments.create({
+                data: {
+                    text: faker.lorem.sentences({ min: 2, max: 5 }),
+                    user_id: users[Math.floor(Math.random() * users.length)].id, // Random user ID
+                    review_id: review.id,
+                },
+            })
+        )
+    );
+    console.log('Generated comments:', comments);
 
-
-     console.log("Generating comments");
-      const [comment1, comment2, comment3] = await Promise.all(
-        [...Array(3)].map(( _, i) => {
-          return prisma.comments.create({
-            data: {
-              text: faker.lorem.sentences({ min: 2, max: 5 }),
-              user_id: users[i].id,
-              review_id: reviews[i].id,
-            },
-          });
-        })
-      );
-      const comments = await prisma.comments.findMany();
-      console.log("generated comments:", comments);
-
+    await prisma.$disconnect();
 };
 
-main().then(async ()=> {
-    await prisma.$disconnect()
-}).catch( async(err) => {
-    console.log(`ERROR: ${err}`);
-    await prisma.$disconnect()
-})
+main().catch(async (err) => {
+    console.error('ERROR:', err);
+    await prisma.$disconnect();
+});

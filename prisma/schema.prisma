@@ -21,6 +21,12 @@ model users {
   email      String?
   first_name String?
   last_name  String?
+  phone_number String?
+  street_address String?
+  city         String?
+  state        String?
+  zip_code     String?
+  country_code  String?
   products   products[]
 }
 
@@ -30,6 +36,8 @@ model products {
   product_type String
   description  String
   img_url      String
+  category     String?
+  artist       String?
   user_id      String
   user         users?   @relation(fields: [user_id], references: [id])
   reviews      reviews[]
