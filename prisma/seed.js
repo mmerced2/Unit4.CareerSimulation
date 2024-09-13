@@ -1,5 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
-const { albumsArray } = require('./albums_data');
+const { albumsArray } = require('./albums_data'); // Make sure this file exports an array of album data
 const { faker } = require('@faker-js/faker');
 
 const prisma = new PrismaClient();
@@ -9,11 +9,11 @@ const main = async () => {
 
     // Clear existing data
     console.log('Clearing existing data...');
-    const deleteComments = prisma.products.deleteMany();
+    const deleteComments = prisma.comments.deleteMany();
     const deleteReviews = prisma.reviews.deleteMany();
     const deleteProducts = prisma.products.deleteMany();
     const deleteUsers = prisma.users.deleteMany();
-    await prisma.$transaction([deleteReviews,deleteComments,deleteProducts,deleteUsers]);
+    await prisma.$transaction([deleteComments, deleteReviews, deleteProducts, deleteUsers]);
 
     // Seed users
     console.log('Creating users...');
@@ -40,27 +40,20 @@ const main = async () => {
 
     // Seed products using albumsArray
     console.log('Creating products...');
-    await Promise.all(
-        users.map(user =>
-            Promise.all(
-                albumsArray.map(album =>
-                    prisma.products.create({
-                        data: {
-                            name: album.name,
-                            product_type: album.product_type,
-                            description: album.description,
-                            img_url: album.img_url,
-                            category: album.category,
-                            artist: album.artist,
-                            user_id: user.id, // Assign user ID from the list of users
-                        },
-                    })
-                )
-            )
+    const products = await Promise.all(
+        albumsArray.map(album =>
+            prisma.products.create({
+                data: {
+                    name: album.name,
+                    product_type: album.product_type,
+                    description: album.description,
+                    img_url: album.img_url,
+                    category: album.category,
+                    artist: album.artist,
+                },
+            })
         )
     );
-
-    const products = await prisma.products.findMany();
     console.log('Created products:', products);
 
     // Generate reviews

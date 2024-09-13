@@ -1,5 +1,5 @@
 const albumsArray = [
-    {
+    { 
         name :        "Cowboy Carter",
         product_type :        "Vinyl",
         description :        "Cowboy Carter is the eighth studio album by American singer and songwriter Beyoncé, released on March 29, 2024, via Parkwood Entertainment and Columbia Records",

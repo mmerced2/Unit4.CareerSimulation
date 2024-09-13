@@ -12,7 +12,6 @@ const getAllProducts = async () => {
     product_type: "asc",
    }
   });
-  return products;
 };
 
 const getProductById = async (product_id) => {

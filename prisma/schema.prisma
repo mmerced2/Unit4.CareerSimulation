@@ -27,7 +27,8 @@ model users {
   state        String?
   zip_code     String?
   country_code  String?
-  products   products[]
+  reviews       reviews[]
+  comments      comments[]
 }
 
 model products {
@@ -36,24 +37,24 @@ model products {
   product_type String
   description  String
   img_url      String
-  category     String?
-  artist       String?
-  user_id      String
-  user         users?   @relation(fields: [user_id], references: [id])
+  category     String
+  artist       String
   reviews      reviews[]
 
+  @@unique([name, artist, category]) // Composite unique constraint
 }
+
 
 model reviews {
   id         String   @id @default(uuid())
   rating     Int
   text       String
   product_id String
+  user         users?   @relation(fields: [user_id], references: [id])
   user_id    String
   createdAt  DateTime @default(now())
   products   products @relation(fields: [product_id], references: [id])
-
-
+  comments    comments[]
   @@unique([product_id, user_id])
 }
 
@@ -61,6 +62,8 @@ model comments {
   id        String   @id @default(uuid())
   text      String
   review_id String
+  reviews     reviews @relation(fields: [review_id], references: [id])
   user_id   String
+  user         users?   @relation(fields: [user_id], references: [id])
   createdAt DateTime @default(now())
 }
