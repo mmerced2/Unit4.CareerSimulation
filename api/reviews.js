@@ -29,7 +29,7 @@ reviewsRouter.get("/user/",requireUser, async (req,res,next) => {
 
 reviewsRouter.get("/product/:id", async (req, res, next) => {
     try {
-        const review = await getReviewByProductId(req.params.product_id);
+        const review = await getReviewByProductId(req.params.id);
         res.send({ review });
     } catch (error) {
         next(error);
