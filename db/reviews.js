@@ -27,9 +27,7 @@ const getReviewsbyUserId = (user_id) => {
 const getReviewByProductId = (product_id) => {
     return prisma.reviews.findMany({
         where: { product_id },
-        include: {
-            products: true,
-        },
+            
     });
 };
 
