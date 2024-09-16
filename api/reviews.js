@@ -1,7 +1,7 @@
 const express = require("express");
 const reviewsRouter = express.Router();
 const {requireUser} = require("./products_utils");
-const {getReviews, getReviewById, updateReview,deleteReview,createReview,getReviewsbyUserId } =require('../db/reviews')
+const {getReviews, getReviewById, updateReview,deleteReview,createReview,getReviewsbyUserId, getReviewByProductId } =require('../db/reviews')
 
 
 //get request for reviews
@@ -27,6 +27,16 @@ reviewsRouter.get("/user/",requireUser, async (req,res,next) => {
     }
 });
 
+reviewsRouter.get("/product/:id", async (req, res, next) => {
+    try {
+        const review = await getReviewByProductId(req.params.product_id);
+        res.send({ review });
+    } catch (error) {
+        next(error);
+    }
+});
+
+
 
 ///placeholder for get review by id
 reviewsRouter.get("/:id", async (req,res,next) => {
@@ -38,6 +48,7 @@ reviewsRouter.get("/:id", async (req,res,next) => {
         next({ name, message });
     }
 });
+
 
 
 

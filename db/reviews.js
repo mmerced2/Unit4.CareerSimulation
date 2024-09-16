@@ -24,17 +24,22 @@ const getReviewsbyUserId = (user_id) => {
     });
 };
 
+const getReviewByProductId = (product_id) => {
+    return prisma.reviews.findMany({
+        where: { product_id },
+        include: {
+            products: true,
+        },
+    });
+};
+
 const getReviewById = async (review_id) => {
     return prisma.reviews.findUnique({
         where: {id: review_id},
     });
 };
 
-const getReviewByProductId = (product_id) => {
-    return prisma.reviews.findUnique({
-        where: {id: product_id},
-    })
-}
+
 
 const updateReview = (review_id, reviewsData) => {
     return prisma.reviews.update({
